@@ -229,8 +229,10 @@ public Guid Immo_Memory_Optimized(BenchmarkString input)
 
 - UTF16 tended to slow down the process
 - While the two `Basic_*` functions always allocated, they were often **pretty decent performers!** Meaning they're perfectly usable if you don't care about micro-optimisation. Perhaps even perferrable as they're easy to understand among developers of most skill levels.
+- Different functions may not return the same GUID for the same string due to encoding or crypto differences. But the same function will always return the same GUID for the same string.
 
 ## References
+
 - [GitHub repo for apisof.net](https://github.com/terrajobst/apisof.net/blob/31398940e1729982a7f5e56e0656beb55045c249/src/Terrajobst.UsageCrawling/ApiKey.cs#L50)
 - [All About Span: Exploring a New .NET Mainstay](https://learn.microsoft.com/en-us/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay)
 - [Enumerable.Range(Int32, Int32) Method](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.range?view=net-8.0)
@@ -238,6 +240,7 @@ public Guid Immo_Memory_Optimized(BenchmarkString input)
 - [MemoryMarshal.AsBytes Method](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.asbytes?view=net-8.0)
 
 ## Notes
+
 - A big thank you to Immo for posting the code snippet on Twitter
 - A thanks to replies in the [Twitter thread](https://twitter.com/terrajobst/status/1507808952146223106) to give ideas on what to test and try.
 	- Including an [`ArrayPool` benchmark](https://github.com/Treit/MiscBenchmarks/tree/main/ArrayPoolVsStackAlloc) by [Mike Treit](https://twitter.com/MikeTreit) which for this case didn't work out.
