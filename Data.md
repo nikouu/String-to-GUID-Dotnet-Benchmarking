@@ -1,13 +1,11 @@
 ```
-
 BenchmarkDotNet v0.13.12, Windows 10 (10.0.19045.3930/22H2/2022Update)
 Intel Core i7-7700K CPU 4.20GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cores
 .NET SDK 8.0.200-preview.23624.5
   [Host]     : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
   DefaultJob : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
-
-
 ```
+
 | Method                | input |       Mean |    Error |   StdDev |     Median | Ratio | RatioSD |   Gen0 | Allocated | Alloc Ratio |
 | --------------------- | ----: | ---------: | -------: | -------: | ---------: | ----: | ------: | -----: | --------: | ----------: |
 | Basic_MD5             |     0 |   303.5 ns |  6.07 ns |  9.62 ns |   302.8 ns |  1.03 |    0.05 | 0.0095 |      40 B |          NA |
@@ -83,7 +81,7 @@ Intel Core i7-7700K CPU 4.20GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cor
 | Immo_Speed_Optimized  |  1000 | 1,866.3 ns | 29.82 ns | 27.90 ns | 1,872.0 ns |  0.96 |    0.01 | 0.2441 |    1024 B |        1.00 |
 
 ```
-input       : Value of the 'input' parameter
+input       : The length of the input string
 Mean        : Arithmetic mean of all measurements
 Error       : Half of 99.9% confidence interval
 StdDev      : Standard deviation of all measurements
