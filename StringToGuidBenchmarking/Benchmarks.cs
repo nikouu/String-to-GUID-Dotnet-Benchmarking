@@ -12,7 +12,8 @@ namespace StringToGuidBenchmarking
         [ArgumentsSource(nameof(Data))]
         public Guid Basic_MD5(BenchmarkString input)
         {
-            var hash = MD5.HashData(Encoding.UTF8.GetBytes(input.String));
+            var bytes = Encoding.UTF8.GetBytes(input.String);
+            var hash = MD5.HashData(bytes);
             var result = new Guid(hash);
             return result;
         }
@@ -27,7 +28,7 @@ namespace StringToGuidBenchmarking
             return result;
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         [ArgumentsSource(nameof(Data))]
         public Guid Immo_Original(BenchmarkString input)
         {
