@@ -14,7 +14,7 @@ Inspired by:
 ## How to run
 
 1. Get the repo
-1. In the same project as the solution run:
+1. In the same folder as the solution run:
 ```
 dotnet run --configuration Release --framework net8.0 --runtimes net8.0
 ```
@@ -33,16 +33,16 @@ The tests are based on passing in a strings of different lengths. In total there
 1. 500 length string
 1. 1000 length string
 
-These values are chosen to try best balance a representation of potentially "more common" length strings and larger strings for metrics.  
+These values are chosen to best try balance a representation of potentially "more common" length strings and larger strings for metrics without going overboard on the test scenario number.  
 
 ### Code
 
-There are eight methods being benchmarked. 
+There are eight methods being benchmarked and they can be found in [Benchmarks.cs](/StringToGuidBenchmarking/Benchmarks.cs):
 
 | Method                | Description                                                                                                                                                                                           |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Basic_MD5             | Using a default way to get a GUID from an MD5 hash                                                                                                                                                    |
-| Basic_SHA1            | Using a default way to get a GUID from an SHA1 hash                                                                                                                                                   |
+| Basic_MD5             | Using a "default" way to get a GUID from an MD5 hash                                                                                                                                                  |
+| Basic_SHA1            | Using a "default" way to get a GUID from an SHA1 hash                                                                                                                                                 |
 | Immo_Original         | Our baseline - the code taken from the [repo](https://github.com/terrajobst/apisof.net/blob/31398940e1729982a7f5e56e0656beb55045c249/src/Terrajobst.UsageCrawling/ApiKey.cs#L50) mentioned beforehand |
 | Immo_UTF8_SHA1        | Immo_Original but with MD5 replaced with SHA1. Note the original is UTF8, but the naming here is used to compare the rest of the implementations                                                      |
 | Immo_UTF16_MD5        | Immo_Original but with UTF16 replacing UTF8                                                                                                                                                           |
@@ -118,6 +118,15 @@ The following are trimmed down highlights:
 | Immo_Memory_Optimized |  1000 | 3,142.3 ns |  1.62 |         - |        0.00 |
 | Immo_Speed_Optimized  |  1000 | 1,866.3 ns |  0.96 |    1024 B |        1.00 |
 
+```
+input       : The length of the input string
+Mean        : Arithmetic mean of all measurements
+Ratio       : Mean of the ratio distribution ([Current]/[Baseline])
+Allocated   : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+Alloc Ratio : Allocated memory ratio distribution ([Current]/[Baseline])
+1 ns        : 1 Nanosecond (0.000000001 sec)
+```
+
 These have been selected as they best represent:
 1. What a regular user might do with the `Basic_*` functions
 1. The `Immo_Original` benchmark
@@ -127,7 +136,7 @@ These have been selected as they best represent:
 
 ### `Immo_Original`
 
-The `Immo_Original` function is an outstanding performer and even beats `Immo_Speed_Optimized` in some cases. This is due to MD5 being quicker for smaller/medium string sizes (sizes in respect to the rest of the test scenarios). `Immo_Original` wins in speed in the following tests (ignoring tiny difference):
+The `Immo_Original` function is a great performer and even beats `Immo_Speed_Optimized` in some cases. This is due to MD5 being quicker for smaller/medium string sizes (sizes in respect to the rest of the test scenarios). `Immo_Original` wins in speed in the following tests (ignoring tiny difference):
 
 | Length | Margin |
 | -----: | -----: |
@@ -195,17 +204,7 @@ public Guid Immo_Speed_Optimized(BenchmarkString input)
 
 That's really it in terms of performance increases.
 
-The code does use SHA1 over MD5 which changes the `HashData()` function slightly as SHA1 returns a 20 byte array, as opposed to the 16 bytes from MD5 which fits perfectly into a GUID:
-
-```csharp
-Guid HashData(ReadOnlySpan<byte> bytes)
-{
-    var hashBytes = (Span<byte>)stackalloc byte[20];
-    var written = SHA1.HashData(bytes, hashBytes);
-
-    return new Guid(hashBytes[..16]);
-}
-```
+The code does use SHA1 over MD5 which changes the `HashData()` function slightly as SHA1 returns a 20 byte array, as opposed to the 16 bytes from MD5 which fits perfectly into a GUID.
 
 From research, apparently there will be fewer collisions with SHA1, however if you are really looking for the best performance weigh up whether you want to bring in MD5 in `Immo_Speed_Optimized`. Remember we are just using it for a GUID, not security. But ultimately you could use other SHA algorithms because unless you are interested in micro-optimising, it won't really matter. It could also be the extra overhead of using the range operator to cut 20 bytes to 16.
 
