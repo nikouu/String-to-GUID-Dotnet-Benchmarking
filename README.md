@@ -208,6 +208,8 @@ The code does use SHA1 over MD5 which changes the `HashData()` function slightly
 
 From research, apparently there will be fewer collisions with SHA1, however if you are really looking for the best performance weigh up whether you want to bring in MD5 in `Immo_Speed_Optimized`. Remember we are just using it for a GUID, not security. But ultimately you could use other SHA algorithms because unless you are interested in micro-optimising, it won't really matter. It could also be the extra overhead of using the range operator to cut 20 bytes to 16.
 
+⭐ Edit: A friend of mine with a more modern CPU (his i9-13900k vs my i7-7700k) has vastly superior results for SHA1 vs MD5 (up to ~50% faster for SHA!). This is looking at his mean ratio when compared to his baseline, making it a fair comparison. I assume there has been some SHA optimisations from Intel since my CPU model.
+
 ### `Immo_Memory_Optimized`
 
 While `Immo_Memory_Optimized` can be slower, it does not allocate. Does what it says 🤷‍♀️
